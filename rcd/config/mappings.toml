@@ -1,0 +1,101 @@
+
+[ccxt]
+
+[ccxt.ob]
+
+[ccxt.ob.mapping]
+symbol = 'symbol'
+ts = 'timestamp'
+bids = 'bids'
+asks = 'asks'
+
+[ccxt.funding]
+
+[ccxt.funding.mapping]
+symbol = 'symbol'
+mark_price = 'markPrice'
+index_price = 'indexPrice'
+funding = 'fundingRate'
+next_funding = 'nextFundingRate'
+ts = 'timestamp'
+funding_ts = 'fundingTimestamp'
+
+
+[cryptofeed]
+
+[cryptofeed.oi]
+
+[cryptofeed.oi.mapping]
+symbol = 'symbol'
+oi = 'open_interest'
+ts = 'receipt'
+
+
+[bybit]
+
+[bybit.ticker]
+data_root = 'result'
+is_array = true
+array_root = 'list'
+
+[bybit.ticker.mapping]
+symbol = 'symbol'
+oi = 'openInterest'
+oi_value = 'openInterestValue'
+last_price = 'lastPrice'
+mark_price = 'markPrice'
+index_price = 'indexPrice'
+funding = 'fundingRate'
+
+
+[deribit]
+
+[deribit.ticker]
+data_root = 'result'
+is_array = false
+
+[deribit.ticker.mapping]
+symbol = 'instrument_name'
+ts = 'timestamp'
+oi = 'open_interest'
+last_price = 'last_price'
+mark_price = 'mark_price'
+index_price = 'index_price'
+funding = 'current_funding'
+funding_8h = 'funding_8h'
+
+[dydx]
+
+[dydx.ticker]
+data_root = 'markets'
+is_array = false
+subnode = 'BTC-USD'
+
+[dydx.ticker.mapping]
+symbol = 'market'
+oi = 'openInterest'
+mark_price = 'oraclePrice'
+index_price = 'indexPrice'
+funding = 'nextFundingRate'
+
+
+[bitfinex]
+
+[bitfinex.longs]
+data_root = false
+is_array = true
+array_root = false
+
+[bitfinex.longs.mapping]
+ts = 0
+longs_btc = 1
+
+[bitfinex.shorts]
+data_root = false
+is_array = true
+array_root = false
+single_value = true
+
+[bitfinex.shorts.mapping]
+ts = 0
+shorts_btc = 1

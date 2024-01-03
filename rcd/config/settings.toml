@@ -1,0 +1,132 @@
+storage_method = 'print'
+rec_ob = true
+rec_funding = true
+rec_oi = true
+rec_tickers = true
+
+[db]
+name = "TBD"
+batch_size = 20
+
+[cryptofeed]
+exchanges = ['BinanceFutures', 'Bitmex', 'OKX']
+oi_symbols = ['BTC-USDT-PERP', 'ETH-USDT-PERP']
+
+[ccxt]
+fetch_interval = 60
+fetch_offset = 10
+
+[[ccxt.exchanges]]
+id = "binance"
+ob_symbols = ['BTC/USDT', 'BTC/USDT:USDT']
+funding_symbols = [
+    'BTC/USDT:USDT',
+    'ETH/USDT:USDT',
+    'DOGE/USDT:USDT',
+    'SOL/USDT:USDT',
+    'XRP/USDT:USDT',
+    'BNB/USDT:USDT',
+]
+
+[[ccxt.exchanges]]
+id = "bitmex"
+ob_symbols = []
+funding_symbols = ['BTC/USDT:USDT']
+
+[[ccxt.exchanges]]
+id = "bybit"
+ob_symbols = ['BTC/USDT', 'BTC/USDT:USDT']
+funding_symbols = [
+    'BTC/USDT:USDT',
+    'ETH/USDT:USDT',
+    'DOGE/USDT:USDT',
+    'SOL/USDT:USDT',
+    'XRP/USDT:USDT',
+    'BNB/USDT:USDT',
+]
+
+[[ccxt.exchanges]]
+id = "coinbase"
+ob_symbols = ['BTC/USD']
+funding_symbols = []
+
+[[ccxt.exchanges]]
+id = "deribit"
+ob_symbols = []
+funding_symbols = ['BTC/USDT:USDT']
+
+[[ccxt.exchanges]]
+id = "okx"
+ob_symbols = ['BTC/USDT:USDT']
+funding_symbols = ['BTC/USDT:USDT']
+
+[http]
+
+[[http.endpoints]]
+exchange = 'bybit'
+channel = 'ticker'
+url = 'https://api.bybit.com/v5/market/tickers?category=linear&symbol=BTCUSD'
+interval = 3000
+symbols = []
+
+[[http.endpoints]]
+exchange = 'deribit'
+channel = 'ticker'
+url = 'https://www.deribit.com/api/v2/public/ticker?instrument_name=BTC-PERPETUAL'
+interval = 5000
+symbols = []
+
+[[http.endpoints]]
+exchange = 'dydx'
+channel = 'ticker'
+url = 'https://api.dydx.exchange/v3/markets'
+interval = 60000
+symbols = []
+
+[[http.endpoints]]
+exchange = 'bitfinex'
+channel = 'longs'
+url = 'https://api-pub.bitfinex.com/v2/stats1/pos.size:1m:tBTCUSD:long/hist?limit=1'
+interval = 60000
+symbols = []
+
+[[http.endpoints]]
+exchange = 'bitfinex'
+channel = 'shorts'
+url = 'https://api-pub.bitfinex.com/v2/stats1/pos.size:1m:tBTCUSD:short/hist?limit=1'
+interval = 60000
+symbols = []
+
+[defillama]
+endpoint = 'https://api.llama.fi/tvl/'
+protocols = [
+    'uniswap-v2',
+    'uniswap-v3',
+    'curve-dex',
+    'kine-finance',
+    'venus',
+    'aave-v3',
+    'pancakeswap',
+]
+interval = 900000 # 15 minutes
+
+[ws]
+
+[options]
+deribit = []
+
+[dex]
+uniswap = []
+dydx = []
+orca = []
+kine = []
+pancake = []
+curve = []
+
+[lending]
+venus = []
+aave = []
+compound = []
+
+[cme]
+# Either directly or via coinglass

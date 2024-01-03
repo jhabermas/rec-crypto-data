@@ -1,0 +1,27 @@
+[project]
+name = "rcd"
+version = "0.0.1"
+readme = "README.md"
+requires-python = ">=3.8"
+dependencies = [
+  'aiohttp',
+  'aiofiles',
+  'asyncio',
+  'ccxt',
+  'cryptofeed',
+  'dynaconf',
+  'motor',
+  'prettyprint',
+  'websockets',
+]
+
+[tool.setuptools]
+packages = ['rcd']
+
+[tool.pytest.ini_options]
+log_cli = true
+log_cli_level = "INFO"
+
+[build-system]
+requires = ["setuptools>=43.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
