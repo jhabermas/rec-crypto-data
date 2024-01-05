@@ -1,38 +1,48 @@
-import pandas as pd
-from datetime import datetime, timedelta
-from hydra.aggregation.trades import trades_to_ohlcv_pd, generate_ohlcv
-from tests.tools.data_generation import generate_trades
-from pytest import approx
+from unittest.mock import AsyncMock, MagicMock
+
+import pytest
+
+from rcd.sinks.mongo import MongoDBClient
 
 
-def test_generate_ohlcv():
-    df = pd.DataFrame([{'timestamp': pd.Timestamp('2022-01-01 00:00:00'), 'price': 41000.0, 'amount': 0.1},
-                       {'timestamp': pd.Timestamp('2022-01-01 00:01:00'), 'price': 41001.0, 'amount': 0.2}])
-    df.set_index('timestamp', inplace=True)
-    ohlcv = generate_ohlcv(df)
-    assert 'o' in ohlcv.columns
-    assert 'h' in ohlcv.columns
-    assert 'l' in ohlcv.columns
-    assert 'c' in ohlcv.columns
-    assert 'v' in ohlcv.columns
+@pytest.fixture
+def mock_db_config():
+    return MagicMock(
+        db=MagicMock(
+            dry_run=False,
+            mongo=MagicMock(conn_str="dummy_conn_str"),
+            user="test_user",
+            batch_size=MagicMock(to_dict=lambda: {"default": 5}),
+        )
+    )
 
 
-def test_trades_to_ohlcv_pd():
-    start_time = datetime(2022, 1, 1, 0, 0)
-    end_time = datetime(2022, 1, 1, 0, 5)  # Generate for 5 minutes
-    freq = timedelta(minutes=1)  # Generate trades every minute
-    price_range = (40000, 41000)  # Price between $40,000 and $41,000
-    amount_range = (0.1, 1.0)  # Amount between 0.1 and 1.0 BTC
-    num_trades = 10  # 10 trades per minute
-    random_trades = generate_trades(start_time, end_time, freq, price_range, amount_range, num_trades)
+@pytest.fixture
+def mongodb_client(mock_db_config):
+    return MongoDBClient(mock_db_config)
 
-    ohlcv = trades_to_ohlcv_pd(random_trades)
-    for index, row in ohlcv.iterrows():
-        trades_in_minute = [trade for trade in random_trades if int(index.timestamp() * 1000) <= trade['timestamp'] < int((index + freq).timestamp() * 1000)]
-        if trades_in_minute:
-            assert row['o'] == trades_in_minute[0]['price']
-            assert row['c'] == trades_in_minute[-1]['price']
-            assert row['h'] == max(trade['price'] for trade in trades_in_minute)
-            assert row['l'] == min(trade['price'] for trade in trades_in_minute)
-            assert row['v'] == approx(sum(trade['amount'] for trade in trades_in_minute))
 
+@pytest.mark.asyncio
+async def test_save_to_db_normal_operation(mongodb_client):
+    mongodb_client._insert_many = AsyncMock(return_value=["id1", "id2"])
+
+    data = [{"name": "item1"}, {"name": "item2"}]
+    await mongodb_client.save_to_db(data, "test_collection")
+
+    mongodb_client._insert_many.assert_not_called()
+    assert len(mongodb_client.batch_data["test_collection"]) == 2
+
+
+@pytest.mark.asyncio
+async def test_flush_data_dry_run(mock_db_config):
+    mock_db_config.db.dry_run = True
+    mongodb_client = MongoDBClient(mock_db_config)
+
+    mongodb_client.batch_data["test_collection"] = [
+        {"name": "item1"},
+        {"name": "item2"},
+    ]
+    result = await mongodb_client.flush_data()
+
+    assert len(result) == 2
+    assert len(mongodb_client.batch_data["test_collection"]) == 0

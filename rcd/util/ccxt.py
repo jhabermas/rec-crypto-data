@@ -68,9 +68,14 @@ def instantiate_exchanges(config: Any) -> List[Dict[str, Any]]:
             }
         )
         if e.id == "coinbase":
-            logging.debug("Using authenticated coinbase connection")
-            exchanges[-1]["exchange"].apiKey = config.coinbase.api_key
-            exchanges[-1]["exchange"].secret = config.coinbase.api_secret
+            if "coinbase" in config and "api_key" in config.coinbase:
+                logging.info("Using authenticated coinbase connection")
+                exchanges[-1]["exchange"].apiKey = config.coinbase.api_key
+                exchanges[-1]["exchange"].secret = config.coinbase.api_secret
+            else:
+                logging.warning(
+                    "No API key provided for coinbase. Create .secrets.toml with coinbase.api_key & coinbase.api_secret keys."
+                )
     return exchanges
 
 

@@ -30,6 +30,10 @@ symbol = 'symbol'
 oi = 'open_interest'
 ts = 'receipt'
 
+[cryptofeed.oi.map_symbols]
+'BTC-USDT-PERP' = 'BTC/USDT:USDT'
+'ETH-USDT-PERP' = 'ETH/USDT:USDT'
+'BTC-USD-PERP' = 'BTC/USD:BTC'
 
 [bybit]
 
@@ -94,7 +98,6 @@ longs_btc = 1
 data_root = false
 is_array = true
 array_root = false
-single_value = true
 
 [bitfinex.shorts.mapping]
 ts = 0

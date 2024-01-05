@@ -13,7 +13,7 @@ import uvloop
 from ccxt.async_support import Exchange
 
 from rcd.config import settings
-from rcd.sinks import DataSink
+from rcd.sinks import DataSink, save_to_json
 from rcd.util.ccxt import (
     fetch_funding_rate,
     fetch_order_book,
@@ -32,7 +32,7 @@ logging.basicConfig(
 
 
 async def save_data(
-    sink: DataSink, exchange: str, channel: str, data: Optional[Any]
+    sink: DataSink, exchange: str, channel: str, symbol: str, data: Optional[Any]
 ) -> None:
     """
     Save data from a given exchange and channel using the provided data sink.
@@ -45,8 +45,10 @@ async def save_data(
     """
     if data is not None:
         logging.debug(f"Saving data from {exchange}")
+        if settings.rec_raw_data:
+            await save_to_json(data, {"name": f"{exchange}_{channel}_raw"})
         await sink.store_data(
-            map_api_data(exchange, channel, data),
+            map_api_data(exchange, channel, symbol, data),
             {"name": channel},
         )
     else:
@@ -66,6 +68,8 @@ async def save_ccxt_data(
         data: The data fetched via the CCXT library to be saved.
     """
     logging.debug(f"Saving {channel} from {exchange}")
+    if settings.rec_raw_data:
+        await save_to_json(data, {"name": f"{exchange}_{channel}_raw"})
     await sink.store_data(map_ccxt_data(exchange, channel, data), {"name": channel})
 
 
@@ -81,6 +85,9 @@ async def oi_feed_handler(sink: DataSink, data: Any, receipt: Any) -> None:
     try:
         data_dict = data.to_dict()
         data_dict["receipt"] = receipt * 1000
+        if settings.rec_raw_data:
+            exchange = data.exchange
+            await save_to_json(data_dict, {"name": f"{exchange}_oi_raw"})
         await sink.store_data(
             map_cryptofeed_data(data.exchange, "oi", data_dict), {"name": "oi"}
         )
@@ -93,6 +100,7 @@ async def fetch_and_save_http(
     exchange: str,
     url: str,
     channel: str,
+    symbol: str,
     interval: int,
     sink: DataSink,
 ) -> None:
@@ -109,7 +117,7 @@ async def fetch_and_save_http(
     """
     while True:
         data = await fetch_from_url(session, url)
-        await save_data(sink, exchange, channel, data)
+        await save_data(sink, exchange, channel, symbol, data)
         await asyncio.sleep(interval / 1000)
 
 
@@ -130,6 +138,7 @@ async def fetch_http_data(config: Any, sink: DataSink) -> None:
                     endpoint.exchange,
                     endpoint.url,
                     endpoint.channel,
+                    endpoint.symbol,
                     endpoint.interval,
                     sink,
                 )
@@ -226,6 +235,7 @@ async def main():
     logging.info(f"Funding: {settings.rec_funding}")
     logging.info(f"Open Interest: {settings.rec_oi}")
     logging.info(f"Tickers: {settings.rec_tickers}")
+    logging.info(f"Raw Data: {settings.rec_raw_data}")
     exchanges = []
     try:
         exchanges = instantiate_exchanges(settings)

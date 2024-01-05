@@ -4,5 +4,6 @@ ccxt
 cryptofeed
 dynaconf
 motor
+orjson
 prettyprint
 websockets

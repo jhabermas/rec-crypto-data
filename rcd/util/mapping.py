@@ -25,8 +25,9 @@ def map_data(
     for k, v in format.mapping.items():
         out[k] = data[v]
     if "ts" not in out or out["ts"] is None:
-        print(data)
         out["ts"] = datetime.utcnow().timestamp() * 1000
+    if "map_symbols" in format:
+        out["symbol"] = format.map_symbols[out["symbol"]]
     return out
 
 
@@ -58,7 +59,7 @@ map_cryptofeed_data = partial(map_lib_data, "cryptofeed")
 
 
 def map_api_data(
-    exchange: str, channel: str, message: Dict[str, Any]
+    exchange: str, channel: str, symbol: str, message: Dict[str, Any]
 ) -> List[Dict[str, Any]]:
     """
     Map data from an API message to a standard format.
@@ -79,9 +80,13 @@ def map_api_data(
         if format.is_array:
             items = data[format.array_root] if format.array_root else data
             for item in items:
-                results.append(map_data(item, format, exchange, channel))
+                mapped_data = map_data(item, format, exchange, channel)
+                mapped_data["symbol"] = symbol
+                results.append(mapped_data)
         else:
-            results.append(map_data(data, format, exchange, channel))
+            mapped_data = map_data(data, format, exchange, channel)
+            mapped_data["symbol"] = symbol
+            results.append(mapped_data)
     except Exception as e:
         logging.error(f"Error mapping data for {exchange} {channel}: {e} {data}")
     return results

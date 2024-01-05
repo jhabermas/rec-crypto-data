@@ -5,7 +5,12 @@ from cryptofeed import FeedHandler
 from cryptofeed.defines import OPEN_INTEREST
 
 
-def add_oi_feed(fh: FeedHandler, exchange_id: str, symbols: list[str], handler: Callable[[Any], None]) -> None:
+def add_oi_feed(
+    fh: FeedHandler,
+    exchange_id: str,
+    symbols: list[str],
+    handler: Callable[[Any], None],
+) -> None:
     """
     Add an Open Interest (OI) feed to the FeedHandler for a specific exchange.
 
@@ -64,6 +69,6 @@ async def run_feed(config: Any, handler: Callable[[Any], None]) -> None:
     """
     fh = FeedHandler()
     for ex in config.cryptofeed.exchanges:
-        add_oi_feed(fh, ex, config.cryptofeed.oi_symbols, handler)
+        add_oi_feed(fh, ex, config.cryptofeed[ex].oi_symbols, handler)
 
     fh.run(start_loop=False)

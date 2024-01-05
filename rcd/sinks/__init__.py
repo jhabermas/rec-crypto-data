@@ -1,17 +1,9 @@
-import decimal
 import logging
 from functools import partial
 from pprint import pp
 from typing import Any, Dict, List
 
-import aiofiles
-import orjson as json
-
-
-def default(obj: Any) -> str:
-    if isinstance(obj, decimal.Decimal):
-        return str(obj)
-    raise TypeError
+from rcd.sinks.json import save_to_json
 
 
 async def print_data(data: List[Dict[str, Any]], params: Dict[str, Any]) -> None:
@@ -20,19 +12,11 @@ async def print_data(data: List[Dict[str, Any]], params: Dict[str, Any]) -> None
         pp(f"{params['name']} : {item}")
 
 
-async def save_to_json(data: List[Dict[str, Any]], params: Dict[str, Any]) -> None:
-    filename = f"{params['name']}.json"
-    logging.debug(f"Saving data to {filename}")
-    async with aiofiles.open(filename, "a") as f:
-        for item in data:
-            await f.write(json.dumps(item, default=default).decode("utf-8"))
-
-
 async def save_to_db(
     db_client, data: List[Dict[str, Any]], params: Dict[str, Any]
 ) -> None:
     logging.debug(f"Saving to DB: {params['name']}")
-    db_client.save_to_db(data, params["name"])
+    await db_client.save_to_db(data, params["name"])
 
 
 class DataSink:
@@ -47,10 +31,15 @@ class DataSink:
                 self.storage_method = print_data
             case "json":
                 self.storage_method = save_to_json
-            case "db":
-                from .mongo import DatabaseClient
+            case "mongo":
+                from .mongo import MongoDBClient
 
-                self.db_client = DatabaseClient(config)
+                self.db_client = MongoDBClient(config)
+                self.storage_method = partial(save_to_db, self.db_client)
+            case "oracle":
+                from .oracle import OracleDBClient
+
+                self.db_client = OracleDBClient(config)
                 self.storage_method = partial(save_to_db, self.db_client)
             case _:
                 raise RuntimeError("Invalid storage method")
