@@ -1,4 +1,6 @@
+import json
 import logging
+from asyncio import Lock
 from typing import Any, Dict, List, Optional
 
 from motor.core import AgnosticClient
@@ -13,6 +15,7 @@ class MongoDBClient:
         Args:
             config: Configuration object with database settings.
         """
+        self.lock = Lock()
         self.dry_run = config.db.dry_run
         self.batch_data: Dict[str, List[Any]] = {}
         self.batch_size = config.db.batch_size.to_dict()
@@ -35,18 +38,22 @@ class MongoDBClient:
         Returns:
             List of inserted document IDs, if a batch insert occurs.
         """
-        if collection_name not in self.batch_data:
-            self.batch_data[collection_name] = []
-            if collection_name not in self.batch_size:
-                self.batch_size[collection_name] = self.batch_size["default"]
+        async with self.lock:
+            if collection_name not in self.batch_data:
+                self.batch_data[collection_name] = []
+                if collection_name not in self.batch_size:
+                    self.batch_size[collection_name] = self.batch_size["default"]
 
-        self.batch_data[collection_name].extend(data)
-        if len(self.batch_data[collection_name]) >= self.batch_size[collection_name]:
-            if self.dry_run:
-                await self._dry_insert_many(collection_name)
-            else:
-                await self._insert_many(collection_name)
-        return None
+            self.batch_data[collection_name].extend(data)
+            if (
+                len(self.batch_data[collection_name])
+                >= self.batch_size[collection_name]
+            ):
+                if self.dry_run:
+                    await self._dry_insert_many(collection_name)
+                else:
+                    await self._insert_many(collection_name)
+            return None
 
     async def flush_data(self) -> Optional[List[Any]]:
         logging.info("Flushing data to database")
@@ -60,13 +67,14 @@ class MongoDBClient:
         return all_ids
 
     async def _insert_many(self, collection_name):
-        logging.debug(
+        logging.info(
             f"Inserting {len(self.batch_data[collection_name])} items into {collection_name}"
         )
         try:
             collection = self.db[collection_name]
             result = await collection.insert_many(self.batch_data[collection_name])
             self.batch_data[collection_name].clear()
+            logging.info(f"Inserted {len(result.inserted_ids)} records")
             return result.inserted_ids
         except Exception as e:
             logging.error(f"Error saving data to database: {e}")

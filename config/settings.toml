@@ -76,7 +76,7 @@ funding_symbols = ['BTC/USDT:USDT']
 exchange = 'bybit'
 channel = 'ticker'
 url = 'https://api.bybit.com/v5/market/tickers?category=linear&symbol=BTCUSD'
-interval = 10000
+interval = 30000
 symbol = 'BTC/USDT:USDT'
 
 [[http.endpoints]]
