@@ -1,5 +1,6 @@
 import asyncio
 import logging
+import sys
 import time
 import traceback
 from contextlib import suppress
@@ -12,6 +13,7 @@ import aiohttp
 import uvloop
 from ccxt.async_support import Exchange
 
+import rcd.log_config
 from rcd.config import settings
 from rcd.sinks import DataSink, save_to_json
 from rcd.util.ccxt import (
@@ -23,12 +25,6 @@ from rcd.util.ccxt import (
 from rcd.util.feed import run_feed
 from rcd.util.http import fetch_from_url
 from rcd.util.mapping import map_api_data, map_ccxt_data, map_cryptofeed_data
-
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s [%(name)s] [%(levelname)s] %(message)s",
-    handlers=[logging.FileHandler("debug.log"), logging.StreamHandler()],
-)
 
 
 async def save_data(
@@ -279,4 +275,6 @@ async def main():
 
 
 if __name__ == "__main__":
+    logfile = settings.log.logfile if "logfile" in settings.log else None
+    rcd.log_config.setup_logging(settings.log.level, logfile)
     uvloop.run(main())
