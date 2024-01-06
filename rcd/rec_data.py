@@ -46,7 +46,7 @@ async def save_data(
     if data is not None:
         logging.debug(f"Saving data from {exchange}")
         if settings.rec_raw_data:
-            await save_to_json(data, {"name": f"{exchange}_{channel}_raw"})
+            await save_to_json(data, {"name": f"{exchange}_{channel}_api"})
         await sink.store_data(
             map_api_data(exchange, channel, symbol, data),
             {"name": channel},
@@ -69,7 +69,7 @@ async def save_ccxt_data(
     """
     logging.debug(f"Saving {channel} from {exchange}")
     if settings.rec_raw_data:
-        await save_to_json(data, {"name": f"{exchange}_{channel}_raw"})
+        await save_to_json(data, {"name": f"{exchange}_{channel}_ccxt"})
     await sink.store_data(map_ccxt_data(exchange, channel, data), {"name": channel})
 
 
@@ -85,9 +85,11 @@ async def oi_feed_handler(sink: DataSink, data: Any, receipt: Any) -> None:
     try:
         data_dict = data.to_dict()
         data_dict["receipt"] = receipt * 1000
+        data_dict["timestamp"] = data_dict["timestamp"] * 1000
+        data_dict["open_interest"] = str(data_dict["open_interest"])
         if settings.rec_raw_data:
             exchange = data.exchange
-            await save_to_json(data_dict, {"name": f"{exchange}_oi_raw"})
+            await save_to_json(data_dict, {"name": f"{exchange}_oi_cryptofeed"})
         await sink.store_data(
             map_cryptofeed_data(data.exchange, "oi", data_dict), {"name": "oi"}
         )
@@ -174,6 +176,16 @@ async def fetch_and_save_funding(
         sink: The data sink object used for storing data.
     """
     data = await fetch_funding_rate(exchange, symbol)
+    # Fix for bug in ccxt
+    if exchange == "okx":
+        data["timestamp"] = int(data["info"]["ts"])
+    elif exchange == "bitmex":
+        data["fundingTimestamp"] = (
+            datetime.strptime(
+                data["fundingDatetime"], "%Y-%m-%dT%H:%M:%S.%fZ"
+            ).timestamp()
+            * 1000
+        )
     await save_ccxt_data(sink, exchange.id, "funding", data)
 
 

@@ -1,0 +1,32 @@
+{
+  "info": {
+    "fundingRate": "-0.0000578118886067",
+    "fundingTime": "1704499200000",
+    "instId": "BTC-USDT-SWAP",
+    "instType": "SWAP",
+    "maxFundingRate": "0.00375",
+    "method": "next_period",
+    "minFundingRate": "-0.00375",
+    "nextFundingRate": "-0.0000359818442650",
+    "nextFundingTime": "1704528000000",
+    "settFundingRate": "0.0000161946813798",
+    "settState": "settled",
+    "ts": "1704491961472"
+  },
+  "symbol": "BTC/USDT:USDT",
+  "markPrice": null,
+  "indexPrice": null,
+  "interestRate": 0.0,
+  "estimatedSettlePrice": null,
+  "timestamp": 1704491961472,
+  "datetime": null,
+  "fundingRate": -0.0000578118886067,
+  "fundingTimestamp": 1704499200000,
+  "fundingDatetime": "2024-01-06T00:00:00.000Z",
+  "nextFundingRate": -0.000035981844265,
+  "nextFundingTimestamp": 1704528000000,
+  "nextFundingDatetime": "2024-01-06T08:00:00.000Z",
+  "previousFundingRate": null,
+  "previousFundingTimestamp": null,
+  "previousFundingDatetime": null
+}

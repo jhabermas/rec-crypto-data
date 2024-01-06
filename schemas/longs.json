@@ -1,0 +1,24 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+        "exchange": {
+            "type": "string"
+        },
+        "symbol": {
+            "type": "string"
+        },
+        "ts": {
+            "type": "number"
+        },
+        "longs": {
+            "type": "number"
+        }
+    },
+    "required": [
+        "exchange",
+        "symbol",
+        "ts",
+        "longs"
+    ]
+}

@@ -19,8 +19,6 @@ async def fetch_order_book(exchange: ccxt.Exchange, symbol: str) -> Dict[str, An
     logging.debug(f"Fetching order book for {symbol} from {exchange.id}")
     try:
         order_book = await exchange.fetch_l2_order_book(symbol)
-        if "timestamp" not in order_book:
-            order_book["timestamp"] = datetime.utcnow().timestamp() * 1000
         return order_book
     except Exception as e:
         logging.error(f"Error fetching order book for {symbol}: {e}")

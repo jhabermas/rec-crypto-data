@@ -1,0 +1,23 @@
+{
+  "type": "object",
+  "properties": {
+    "exchange": {
+      "type": "string"
+    },
+    "symbol": {
+      "type": "string"
+    },
+    "ts": {
+      "type": "number"
+    },
+    "shorts": {
+      "type": "number"
+    }
+  },
+  "required": [
+    "exchange",
+    "symbol",
+    "ts",
+    "shorts"
+  ]
+}

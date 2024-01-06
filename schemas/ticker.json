@@ -1,0 +1,56 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "exchange": {
+      "type": "string"
+    },
+    "symbol": {
+      "type": "string"
+    },
+    "ts": {
+      "type": [
+        "number",
+        "string"
+      ]
+    },
+    "index_price": {
+      "type": [
+        "number",
+        "string"
+      ]
+    },
+    "mark_price": {
+      "type": [
+        "number",
+        "string"
+      ]
+    },
+    "funding": {
+      "type": [
+        "number",
+        "string"
+      ]
+    },
+    "funding_ts": {
+      "type": [
+        "number",
+        "string"
+      ]
+    },
+    "next_funding": {
+      "type": [
+        "number",
+        "null"
+      ]
+    }
+  },
+  "required": [
+    "exchange",
+    "symbol",
+    "ts",
+    "index_price",
+    "mark_price",
+    "funding"
+  ]
+}

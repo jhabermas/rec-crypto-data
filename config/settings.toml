@@ -1,19 +1,19 @@
-storage_method = 'print'
-rec_ob = false
+storage_method = 'mongo'
+rec_ob = true
 rec_funding = true
-rec_oi = false
+rec_oi = true
 rec_tickers = true
 rec_raw_data = false
 
 [db]
-dry_run = true
+dry_run = false
 
 [db.batch_size]
 default = 50
 ob = 20
 oi = 100
 ticker = 20
-funding = 20
+funding = 80
 
 [cryptofeed]
 exchanges = ['BinanceFutures', 'Bitmex', 'OKX']
@@ -25,7 +25,7 @@ oi_symbols = ['BTC-USDT-PERP', 'ETH-USDT-PERP']
 oi_symbols = ['BTC-USD-PERP']
 
 [cryptofeed.OKX]
-oi_symbols = ['BTC-USDT-PERP', 'ETH-USDT-PERP']
+oi_symbols = ['BTC-USDT-PERP']
 
 [ccxt]
 fetch_interval = 60
@@ -66,11 +66,6 @@ ob_symbols = ['BTC/USD']
 funding_symbols = []
 
 [[ccxt.exchanges]]
-id = "deribit"
-ob_symbols = []
-funding_symbols = ['BTC/USDT:USDT']
-
-[[ccxt.exchanges]]
 id = "okx"
 ob_symbols = ['BTC/USDT:USDT']
 funding_symbols = ['BTC/USDT:USDT']
@@ -81,7 +76,7 @@ funding_symbols = ['BTC/USDT:USDT']
 exchange = 'bybit'
 channel = 'ticker'
 url = 'https://api.bybit.com/v5/market/tickers?category=linear&symbol=BTCUSD'
-interval = 5000
+interval = 10000
 symbol = 'BTC/USDT:USDT'
 
 [[http.endpoints]]

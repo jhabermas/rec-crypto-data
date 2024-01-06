@@ -28,7 +28,8 @@ funding_ts = 'fundingTimestamp'
 [cryptofeed.oi.mapping]
 symbol = 'symbol'
 oi = 'open_interest'
-ts = 'receipt'
+ts = 'timestamp'
+receipt = 'receipt'
 
 [cryptofeed.oi.map_symbols]
 'BTC-USDT-PERP' = 'BTC/USDT:USDT'
@@ -92,7 +93,7 @@ array_root = false
 
 [bitfinex.longs.mapping]
 ts = 0
-longs_btc = 1
+longs = 1
 
 [bitfinex.shorts]
 data_root = false
@@ -101,4 +102,4 @@ array_root = false
 
 [bitfinex.shorts.mapping]
 ts = 0
-shorts_btc = 1
+shorts = 1
