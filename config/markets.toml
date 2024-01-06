@@ -1,0 +1,5 @@
+spot = ['binance', 'bybit', 'okx', 'coinbase']
+perps = ['binance', 'bybit', 'okx']
+options = ['deribit', 'okx']
+interval = 30000
+markets = ['USD', 'USDT', 'FDUSD']

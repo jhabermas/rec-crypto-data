@@ -3,6 +3,7 @@ rec_ob = true
 rec_funding = true
 rec_oi = true
 rec_tickers = true
+rec_positions = true
 rec_raw_data = false
 
 [db]
@@ -94,15 +95,36 @@ interval = 60000
 symbol = 'BTC/USDT:USDT'
 
 [[http.endpoints]]
+exchange = 'bybit'
+channel = 'positions'
+url = 'https://api.bybit.com//v5/market/account-ratio?category=linear&symbol=BTCUSDT&period=5min&limit=1'
+interval = 300000
+symbol = 'BTC/USDT:ACCOUNTS'
+
+[[http.endpoints]]
+exchange = 'binance'
+channel = 'positions'
+url = 'https://fapi.binance.com/futures/data/globalLongShortAccountRatio?symbol=BTCUSDT&period=5m&limit=1'
+interval = 300000
+symbol = 'BTC/USDT:ACCOUNTS'
+
+[[http.endpoints]]
+exchange = 'binance'
+channel = 'positions'
+url = 'https://fapi.binance.com/futures/data/topLongShortAccountRatio?symbol=BTCUSDT&period=5m&limit=1'
+interval = 300000
+symbol = 'BTC/USDT:TOP'
+
+[[http.endpoints]]
 exchange = 'bitfinex'
-channel = 'longs'
+channel = 'positions'
 url = 'https://api-pub.bitfinex.com/v2/stats1/pos.size:1m:tBTCUSD:long/hist?limit=1'
 interval = 60000
 symbol = 'BTC/USDT:LONGS'
 
 [[http.endpoints]]
 exchange = 'bitfinex'
-channel = 'shorts'
+channel = 'positions'
 url = 'https://api-pub.bitfinex.com/v2/stats1/pos.size:1m:tBTCUSD:short/hist?limit=1'
 interval = 60000
 symbol = 'BTC/USDT:SHORTS'

@@ -86,20 +86,35 @@ funding = 'nextFundingRate'
 
 [bitfinex]
 
-[bitfinex.longs]
+[bitfinex.positions]
 data_root = false
 is_array = true
 array_root = false
 
-[bitfinex.longs.mapping]
+[bitfinex.positions.mapping]
 ts = 0
-longs = 1
+contracts = 1
 
-[bitfinex.shorts]
+[bybit.positions]
+data_root = 'result'
+is_array = true
+array_root = 'list'
+
+[bybit.positions.mapping]
+symbol = 'symbol'
+ts = 'timestamp'
+longs = 'buyRatio'
+shorts = 'sellRatio'
+
+[binance]
+
+[binance.positions]
 data_root = false
 is_array = true
 array_root = false
 
-[bitfinex.shorts.mapping]
-ts = 0
-shorts = 1
+[binance.positions.mapping]
+symbol = 'symbol'
+ts = 'timestamp'
+longs = 'longAccount'
+shorts = 'shortAccount'
