@@ -5,6 +5,8 @@ from rcd.config import settings
 from rcd.config.log_config import setup_logging
 import time
 
+log = logging.getLogger(__name__)
+
 dsn = settings.db.oracle.dsn
 username = settings.db.admin.user
 password = settings.db.admin.password
@@ -32,7 +34,7 @@ def main():
     while True:
         db_size = get_db_size()
         if db_size is not None:
-            logging.info(f"data_size: {db_size} MB")
+            log.info(f'{db_size}')
         time.sleep(900)
 
 if __name__ == "__main__":
