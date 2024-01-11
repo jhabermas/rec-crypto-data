@@ -3,6 +3,7 @@ asyncio
 ccxt
 cryptofeed
 dynaconf
+importlib
 motor
 orjson
 prettyprint

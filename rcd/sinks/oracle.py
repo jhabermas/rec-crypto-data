@@ -3,6 +3,8 @@ from typing import Any, Dict, List
 
 import oracledb
 
+log = logging.getLogger(__name__)
+
 
 class OracleDBClient:
     def __init__(self, config: Any) -> None:
@@ -41,10 +43,10 @@ class OracleDBClient:
                         await cursor.executemany(query, self.batch_data[table_name])
                         self.batch_data[table_name].clear()
             except oracledb.Error as e:
-                logging.error(f"Error saving data to database: {e}")
+                log.error(f"Error saving data to database: {e}")
 
     async def flush_data(self):
-        logging.info("Flushing data to database")
+        log.info("Flushing data to database")
         for table_name, data in self.batch_data.items():
             if data:
                 try:
@@ -54,6 +56,7 @@ class OracleDBClient:
                             await cursor.setinputsizes(oracledb.DB_TYPE_JSON)
                             await cursor.executemany(query, data)
                 except oracledb.Error as e:
-                    logging.error(f"Error flushing data to database: {e}")
+                    log.error(f"Error flushing data to database: {e}")
+                    log.exception(e)
                 finally:
                     self.batch_data[table_name].clear()

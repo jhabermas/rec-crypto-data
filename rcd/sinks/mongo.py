@@ -6,6 +6,8 @@ from typing import Any, Dict, List, Optional
 from motor.core import AgnosticClient
 from motor.motor_asyncio import AsyncIOMotorClient
 
+log = logging.getLogger(__name__)
+
 
 class MongoDBClient:
     def __init__(self, config: Any) -> None:
@@ -23,7 +25,7 @@ class MongoDBClient:
             self.client: AgnosticClient = AsyncIOMotorClient(config.db.mongo.conn_str)
             self.db = self.client[config.db.user]
         else:
-            logging.info("Database Client created in dry_run mode")
+            log.info("Database Client created in dry_run mode")
 
     async def save_to_db(
         self, data: List[Dict[str, Any]], collection_name: str
@@ -56,7 +58,7 @@ class MongoDBClient:
             return None
 
     async def flush_data(self) -> Optional[List[Any]]:
-        logging.info("Flushing data to database")
+        log.info("Flushing data to database")
         all_ids = []
         for collection_name, data in self.batch_data.items():
             if data:
@@ -67,21 +69,21 @@ class MongoDBClient:
         return all_ids
 
     async def _insert_many(self, collection_name):
-        logging.info(
+        log.info(
             f"Inserting {len(self.batch_data[collection_name])} items into {collection_name}"
         )
         try:
             collection = self.db[collection_name]
             result = await collection.insert_many(self.batch_data[collection_name])
             self.batch_data[collection_name].clear()
-            logging.info(f"Inserted {len(result.inserted_ids)} records")
+            log.info(f"Inserted {len(result.inserted_ids)} records")
             return result.inserted_ids
         except Exception as e:
-            logging.error(f"Error saving data to database: {e}")
+            log.error(f"Error saving data to database: {e}")
 
     async def _dry_insert_many(self, collection_name):
         num_items = len(self.batch_data[collection_name])
-        logging.info(f"Dry inserting {num_items} items into {collection_name}")
+        log.info(f"Dry inserting {num_items} items into {collection_name}")
         ids = [i for i in range(0, num_items)]
         self.batch_data[collection_name].clear()
         return ids

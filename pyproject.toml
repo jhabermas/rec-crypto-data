@@ -1,8 +1,8 @@
 [project]
-name = "rcd"
-version = "0.0.1"
+name = "rec-crypto-data"
+version = "0.0.2"
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = ">=3.10"
 dependencies = [
   'aiohttp',
   'aiofiles',
@@ -17,6 +17,9 @@ dependencies = [
 
 [tool.setuptools]
 packages = ['rcd']
+
+[tool.setuptools_scm]
+write_to = "rcd/_version.py"
 
 [tool.pytest.ini_options]
 log_cli = true

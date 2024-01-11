@@ -13,8 +13,7 @@ import aiohttp
 import uvloop
 from ccxt.async_support import Exchange
 
-import rcd.log_config
-from rcd.config import settings
+from rcd.config import log_config, settings
 from rcd.sinks import DataSink, save_to_json
 from rcd.util.ccxt import (
     fetch_funding_rate,
@@ -25,6 +24,8 @@ from rcd.util.ccxt import (
 from rcd.util.feed import run_feed
 from rcd.util.http import fetch_from_url
 from rcd.util.mapping import map_api_data, map_ccxt_data, map_cryptofeed_data
+
+log = logging.getLogger(__name__)
 
 
 async def save_data(
@@ -40,7 +41,7 @@ async def save_data(
         data: The data to be saved. Can be None, in which case a warning is logged.
     """
     if data is not None:
-        logging.debug(f"Saving data from {exchange}")
+        log.debug(f"Saving data from {exchange}")
         if settings.rec_raw_data:
             await save_to_json(data, {"name": f"{exchange}_{channel}_api"})
         await sink.store_data(
@@ -48,7 +49,7 @@ async def save_data(
             {"name": channel},
         )
     else:
-        logging.warning(f"No {channel} data to save from {exchange}")
+        log.warning(f"No {channel} data to save from {exchange}")
 
 
 async def save_ccxt_data(
@@ -63,7 +64,7 @@ async def save_ccxt_data(
         channel: The channel or type of data being processed.
         data: The data fetched via the CCXT library to be saved.
     """
-    logging.debug(f"Saving {channel} from {exchange}")
+    log.debug(f"Saving {channel} from {exchange}")
     if settings.rec_raw_data:
         await save_to_json(data, {"name": f"{exchange}_{channel}_ccxt"})
     await sink.store_data(map_ccxt_data(exchange, channel, data), {"name": channel})
@@ -90,7 +91,7 @@ async def oi_feed_handler(sink: DataSink, data: Any, receipt: Any) -> None:
             map_cryptofeed_data(data.exchange, "oi", data_dict), {"name": "oi"}
         )
     except Exception as e:
-        logging.error(f"OI handler error: {e}")
+        log.error(f"OI handler error: {e}")
 
 
 async def fetch_and_save_http(
@@ -207,7 +208,7 @@ async def fetch_exchange_data(
     offset = config.ccxt.fetch_offset
     await asyncio.sleep(seconds_till_next_minute - offset)
     while True:
-        logging.info("Fetching data...")
+        log.info("Fetching data...")
         start = time.perf_counter()
         tasks = []
         for source in data_sources:
@@ -228,22 +229,22 @@ async def fetch_exchange_data(
 
             except Exception as e:
                 tb_str = traceback.format_exc()
-                logging.error(f"Error fetching data from {exchange.id}: {e}")
-                logging.debug(tb_str)
+                log.error(f"Error fetching data from {exchange.id}: {e}")
+                log.debug(tb_str)
 
         await asyncio.gather(*tasks)
         elapsed = time.perf_counter() - start
-        logging.info(f"Data fetched in {elapsed:0.5f} seconds.")
+        log.info(f"Data fetched in {elapsed:0.5f} seconds.")
         await asyncio.sleep(max(config.ccxt.fetch_interval - elapsed, 0))
 
 
 async def main():
-    logging.info("Initialising...")
-    logging.info(f"Orderbook: {settings.rec_ob}")
-    logging.info(f"Funding: {settings.rec_funding}")
-    logging.info(f"Open Interest: {settings.rec_oi}")
-    logging.info(f"Tickers: {settings.rec_tickers}")
-    logging.info(f"Raw Data: {settings.rec_raw_data}")
+    log.info("Initialising...")
+    log.info(f"Orderbook: {settings.rec_ob}")
+    log.info(f"Funding: {settings.rec_funding}")
+    log.info(f"Open Interest: {settings.rec_oi}")
+    log.info(f"Tickers: {settings.rec_tickers}")
+    log.info(f"Raw Data: {settings.rec_raw_data}")
     exchanges = []
     try:
         exchanges = instantiate_exchanges(settings)
@@ -262,19 +263,17 @@ async def main():
                 tasks.append(asyncio.create_task(fetch_http_data(settings, sink)))
             await asyncio.gather(*tasks, return_exceptions=True)
     except KeyboardInterrupt:
-        logging.warning("Keyboard interrupt received. Shutting down...")
+        log.warning("Keyboard interrupt received. Shutting down...")
     except asyncio.CancelledError:
-        logging.warning("Tasks cancelled.")
+        log.warning("Tasks cancelled.")
     except Exception as e:
-        tb_str = traceback.format_exc()
-        logging.critical(f"Critical error: {e}. {tb_str}")
+        log.exception(e)
     finally:
-        logging.info("Terminating exchange connections...")
+        log.info("Terminating exchange connections...")
         await terminate_connections(exchanges)
-        logging.info("Recording completed.")
+        log.info("Recording completed.")
 
 
 if __name__ == "__main__":
-    logfile = settings.log.logfile if "logfile" in settings.log else None
-    rcd.log_config.setup_logging(settings.log.level, logfile)
+    log_config.setup_logging()
     uvloop.run(main())

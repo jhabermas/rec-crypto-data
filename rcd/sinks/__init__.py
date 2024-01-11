@@ -5,9 +5,11 @@ from typing import Any, Dict, List
 
 from rcd.sinks.json import save_to_json
 
+log = logging.getLogger(__name__)
+
 
 async def print_data(data: List[Dict[str, Any]], params: Dict[str, Any]) -> None:
-    logging.debug(f"Print data: {params['name']}")
+    log.debug(f"Print data: {params['name']}")
     for item in data:
         pp(f"{params['name']} : {item}")
 
@@ -15,7 +17,7 @@ async def print_data(data: List[Dict[str, Any]], params: Dict[str, Any]) -> None
 async def save_to_db(
     db_client, data: List[Dict[str, Any]], params: Dict[str, Any]
 ) -> None:
-    logging.debug(f"Saving to DB: {params['name']}")
+    log.debug(f"Saving to DB: {params['name']}")
     await db_client.save_to_db(data, params["name"])
 
 
@@ -25,7 +27,7 @@ class DataSink:
     """
 
     def __init__(self, config):
-        logging.info(f"Data sink: {config.storage_method}")
+        log.info(f"Data sink: {config.storage_method}")
         match config.storage_method:
             case "print":
                 self.storage_method = print_data
@@ -53,10 +55,10 @@ class DataSink:
     async def store_data(
         self, data: List[Dict[str, Any]], params: Dict[str, Any]
     ) -> None:
-        logging.debug(f"Store data: {params['name']}")
+        log.debug(f"Store data: {params['name']}")
         await self.storage_method(data, params)
 
     async def cleanup(self) -> None:
-        logging.info("Cleaning up")
+        log.info("Cleaning up")
         if hasattr(self, "db_client"):
             await self.db_client.flush_data()

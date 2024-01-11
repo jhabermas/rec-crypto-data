@@ -2,7 +2,7 @@ import oracledb
 import logging
 from datetime import datetime
 from rcd.config import settings
-from rcd.log_config import setup_logging
+from rcd.config.log_config import setup_logging
 import time
 
 dsn = settings.db.oracle.dsn

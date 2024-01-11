@@ -5,6 +5,8 @@ from typing import Any, Dict, List
 
 from rcd.config import mappings
 
+log = logging.getLogger(__name__)
+
 
 def map_data(
     data: Dict[str, Any], format: Any, exchange: str, channel: str
@@ -50,7 +52,7 @@ def map_lib_data(
         format = mappings[lib][channel]
         return [map_data(data, format, exchange, channel)]
     except Exception as e:
-        logging.error(f"Error mapping data for {lib} {exchange} {channel}: {e} {data}")
+        log.error(f"Error mapping data for {lib} {exchange} {channel}: {e} {data}")
     return []
 
 
@@ -88,5 +90,5 @@ def map_api_data(
             mapped_data["symbol"] = symbol
             results.append(mapped_data)
     except Exception as e:
-        logging.error(f"Error mapping data for {exchange} {channel}: {e} {data}")
+        log.error(f"Error mapping data for {exchange} {channel}: {e} {data}")
     return results

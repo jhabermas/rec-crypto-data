@@ -4,6 +4,8 @@ from typing import Any, Optional
 
 from aiohttp import ClientSession
 
+log = logging.getLogger(__name__)
+
 
 async def fetch_from_url(session: ClientSession, url: str) -> Optional[Any]:
     """
@@ -25,5 +27,5 @@ async def fetch_from_url(session: ClientSession, url: str) -> Optional[Any]:
                 logging.error(f"Error fetching from {url}: {response.status}")
                 return None
     except Exception as e:
-        logging.error(f"Exception during fetching from {url}: {e}")
-        logging.error(traceback.format_exc())
+        log.error(f"Exception during fetching from {url}: {e}")
+        log.error(traceback.format_exc())

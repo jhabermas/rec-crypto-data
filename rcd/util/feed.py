@@ -4,6 +4,8 @@ from typing import Any, Callable
 from cryptofeed import FeedHandler
 from cryptofeed.defines import OPEN_INTEREST
 
+log = logging.getLogger(__name__)
+
 
 def add_oi_feed(
     fh: FeedHandler,
@@ -21,7 +23,7 @@ def add_oi_feed(
         handler: The callback function for the feed.
     """
     try:
-        logging.info(f"Adding OI feed from {exchange_id}")
+        log.info(f"Adding OI feed from {exchange_id}")
         match exchange_id:
             case "BinanceFutures":
                 from cryptofeed.exchanges import BinanceFutures
@@ -56,7 +58,7 @@ def add_oi_feed(
             case _:
                 raise RuntimeError(f"Unsupported exchange")
     except Exception as e:
-        logging.error(f"Error adding {exchange_id} feed: {e}")
+        log.error(f"Error adding {exchange_id} feed: {e}")
 
 
 async def run_feed(config: Any, handler: Callable[[Any], None]) -> None:
