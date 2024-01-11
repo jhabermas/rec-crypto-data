@@ -38,5 +38,5 @@ def main():
         time.sleep(900)
 
 if __name__ == "__main__":
-    setup_logging(level='info', logfile=None)
+    setup_logging()
     main()

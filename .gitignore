@@ -28,3 +28,4 @@ build/
 # Ignore dynaconf secret and local files files
 .secrets.*
 *.local.toml
+.env

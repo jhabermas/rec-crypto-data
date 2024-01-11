@@ -13,6 +13,7 @@ from rcd import __version__
 config = Dynaconf(
     envvar_prefix="RCD_LOGGING",
     settings_files=["logging.toml"],
+    load_dotenv=True
 )
 
 
@@ -22,7 +23,7 @@ def get_git_revision_short_hash():
         short_hash = str(short_hash, "utf-8").strip()
         return short_hash
     except Exception:
-        return "unknown"
+        return config.get("GIT_HASH", "unknown")
 
 
 class JsonFormatter(logging.Formatter):
