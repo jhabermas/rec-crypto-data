@@ -1,5 +1,67 @@
-spot = ['binance', 'bybit', 'okx', 'coinbase']
-perps = ['binance', 'bybit', 'okx']
-options = ['deribit', 'okx']
-interval = 30000
-markets = ['USD', 'USDT', 'FDUSD']
+[markets]
+interval = 900
+
+[[markets.endpoints]]
+exchange = 'binance'
+channel = 'tickers'
+url = 'https://fapi.binance.com/futures/data/topLongShortAccountRatio?symbol=BTCUSDT&period=5m&limit=1'
+
+[[markets.endpoints]]
+exchange = 'bybit'
+channel = 'tickers'
+url = 'https://api.bybit.com//v5/market/account-ratio?category=linear&symbol=BTCUSDT&period=5min&limit=1'
+
+[[markets.endpoints]]
+exchange = 'okx'
+channel = 'tickers'
+url = 'https://api.bybit.com//v5/market/account-ratio?category=linear&symbol=BTCUSDT&period=5min&limit=1'
+
+[[markets.endpoints]]
+exchange = 'okx'
+channel = 'options'
+url = 'https://api.bybit.com//v5/market/account-ratio?category=linear&symbol=BTCUSDT&period=5min&limit=1'
+
+[[markets.endpoints]]
+exchange = 'okx'
+channel = 'putcall'
+url = 'https://api.bybit.com//v5/market/account-ratio?category=linear&symbol=BTCUSDT&period=5min&limit=1'
+
+[[markets.endpoints]]
+exchange = 'dydx'
+channel = 'tickers'
+url = 'https://api.bybit.com//v5/market/account-ratio?category=linear&symbol=BTCUSDT&period=5min&limit=1'
+
+[[markets.endpoints]]
+exchange = 'deribit'
+channel = 'options1'
+url = 'https://www.deribit.com/api/v2/public/ticker?instrument_name=BTC-PERPETUAL'
+
+[[markets.endpoints]]
+exchange = 'deribit'
+channel = 'options2'
+url = 'https://www.deribit.com/api/v2/public/ticker?instrument_name=BTC-PERPETUAL'
+
+[defillama]
+endpoint = 'https://api.llama.fi/tvl/'
+protocols = [
+    'uniswap-v2',
+    'uniswap-v3',
+    'curve-dex',
+    'kine-finance',
+    'venus',
+    'aave-v3',
+    'pancakeswap',
+]
+interval = 3600
+
+[marketcap]
+
+[[marketcap.endpoints]]
+api = 'coingecko'
+channel = 'markets'
+url = 'https://www.deribit.com/api/v2/public/ticker?instrument_name=BTC-PERPETUAL'
+
+[[marketcap.endpoints]]
+api = 'coinmarketcap'
+channel = 'markets'
+url = 'https://www.deribit.com/api/v2/public/ticker?instrument_name=BTC-PERPETUAL'
