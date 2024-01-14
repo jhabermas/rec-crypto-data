@@ -83,11 +83,13 @@ def map_api_data(
             items = data[format.array_root] if format.array_root else data
             for item in items:
                 mapped_data = map_data(item, format, exchange, channel)
-                mapped_data["symbol"] = symbol
+                if symbol:
+                    mapped_data["symbol"] = symbol
                 results.append(mapped_data)
         else:
             mapped_data = map_data(data, format, exchange, channel)
-            mapped_data["symbol"] = symbol
+            if symbol:
+                mapped_data["symbol"] = symbol
             results.append(mapped_data)
     except Exception as e:
         log.error(f"Error mapping data for {exchange} {channel}: {e} {data}")
