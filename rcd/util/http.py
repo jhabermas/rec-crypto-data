@@ -31,8 +31,8 @@ async def fetch_from_url(
                 data = await response.json()
                 return data
             else:
-                logging.error(f"Error fetching from {url}: {response.status}")
-                return None
+                data = await response.json()
+                logging.error(f"Error fetching from {url}: {data}")
     except Exception as e:
         log.error(f"Exception during fetching from {url}: {e}")
         log.error(traceback.format_exc())
