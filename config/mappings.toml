@@ -1,3 +1,4 @@
+dynaconf_include = ['mappings.market.toml']
 
 [ccxt]
 
