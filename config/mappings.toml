@@ -88,9 +88,7 @@ funding = 'nextFundingRate'
 [bitfinex]
 
 [bitfinex.positions]
-data_root = false
 is_array = true
-array_root = false
 
 [bitfinex.positions.mapping]
 ts = 0
@@ -110,9 +108,7 @@ shorts = 'sellRatio'
 [binance]
 
 [binance.positions]
-data_root = false
 is_array = true
-array_root = false
 
 [binance.positions.mapping]
 symbol = 'symbol'

@@ -9,14 +9,14 @@ import uvloop
 from rcd.config import get_module_config, log_config, settings
 from rcd.sinks import DataSink, save_to_json
 from rcd.util.http import fetch_from_url
-from rcd.util.mapping import map_api_data
+from rcd.util.mapping import map_market_data
 
 log = logging.getLogger(__name__)
 config = get_module_config("markets")
 
 
 async def save_data(
-    sink: DataSink, source: str, channel: str, symbol: str, data: Optional[Any]
+    sink: DataSink, source: str, channel: str, category: str, data: Optional[Any]
 ) -> None:
     """
     Save data from a given exchange and channel using the provided data sink.
@@ -28,13 +28,13 @@ async def save_data(
         data: The data to be saved. Can be None, in which case a warning is logged.
     """
     if data is not None:
-        log.debug(f"Saving {channel} data from {source}")
+        log.debug(f"Saving {channel} [{category}] data from {source}")
         if settings.rec_raw_data:
             await save_to_json(data, {"name": f"{source}_{channel}_api"})
-        # await sink.store_data(
-        #    map_api_data(source, channel, symbol, data),
-        #    {"name": channel},
-        # )
+        await sink.store_data(
+            map_market_data(source, channel, category, data),
+            {"name": channel},
+         )
     else:
         log.warning(f"No {channel} data to save from {source}")
 
@@ -44,6 +44,7 @@ async def fetch_and_save_http(
     exchange: str,
     url: str,
     channel: str,
+    category: str,
     headers: Dict,
     interval: int,
     sink: DataSink,
@@ -60,9 +61,13 @@ async def fetch_and_save_http(
         sink: The data sink object used for storing data.
     """
     while True:
-        data = await fetch_from_url(session, url, headers)
-        await save_data(sink, exchange, channel, None, data)
-        await asyncio.sleep(interval)
+        try:
+            data = await fetch_from_url(session, url, headers)
+            await save_data(sink, exchange, channel, category, data)
+            await asyncio.sleep(interval)
+        except Exception as e:
+            log.error(f"Error when fetching market data from {exchange} {channel} {category}")
+            log.exception(e)
 
 
 async def fetch_http_data(endpoints: Any, sink: DataSink) -> None:
@@ -81,9 +86,9 @@ async def fetch_http_data(endpoints: Any, sink: DataSink) -> None:
                 endpoint.interval if "interval" in endpoint else endpoints.interval
             )
             headers = endpoint.headers if "headers" in endpoint else None
-            print(headers)
+            category = endpoint.category if "category" in endpoint else None
             logging.info(
-                f"Endpoint: {endpoint.api}, channel: {endpoint.channel}, interval: {interval}"
+                f"Endpoint: {endpoint.api}, channel: {endpoint.channel} : {endpoint.category}, interval: {interval}"
             )
             task = asyncio.create_task(
                 fetch_and_save_http(
@@ -91,6 +96,7 @@ async def fetch_http_data(endpoints: Any, sink: DataSink) -> None:
                     endpoint.api,
                     endpoint.url,
                     endpoint.channel,
+                    category,
                     headers,
                     interval,
                     sink,

@@ -77,10 +77,10 @@ def map_api_data(
     results = []
     try:
         format = mappings[exchange][channel]
-        data = message[format.data_root] if format.data_root else message
+        data = message[format.data_root] if "data_root" in format else message
         data = data[format.subnode] if "subnode" in format else data
         if format.is_array:
-            items = data[format.array_root] if format.array_root else data
+            items = data[format.array_root] if "array_root" in format else data
             for item in items:
                 mapped_data = map_data(item, format, exchange, channel)
                 if symbol:
@@ -92,5 +92,43 @@ def map_api_data(
                 mapped_data["symbol"] = symbol
             results.append(mapped_data)
     except Exception as e:
-        log.error(f"Error mapping data for {exchange} {channel}: {e} {data}")
+        log.error(f"Error mapping data for {exchange} {channel}")
+        log.exception(e)
+    return results
+
+
+def map_market_data(
+    exchange: str, channel: str, category: str, message: Dict[str, Any]
+) -> List[Dict[str, Any]]:
+    """
+    Map data from an API message to a standard format.
+
+    Args:
+        exchange: The name of the exchange.
+        channel: The channel from which data is sourced.
+        message: The original API message to be mapped.
+
+    Returns:
+        A list containing dictionaries of mapped data.
+    """
+    results = []
+    try:
+        format = mappings[exchange][channel]
+        data = message[format.data_root] if "data_root" in format else message
+        data = data[format.subnode] if "subnode" in format else data
+        if format.is_array:
+            items = data[format.array_root] if "array_root" in format else data
+            for item in items:
+                mapped_data = map_data(item, format, exchange, channel)
+                if category:
+                    mapped_data["category"] = category
+                results.append(mapped_data)
+        else:
+            mapped_data = map_data(data, format, exchange, channel)
+            if category:
+                mapped_data["category"] = category
+            results.append(mapped_data)
+    except Exception as e:
+        log.error(f"Error mapping data for {exchange} {channel}")
+        log.exception(e)
     return results
