@@ -1,1 +1,11 @@
-twitter = ['whale_alert']
+[news]
+interval = 3600
+
+[news.rss]
+feeds = []
+
+[twitter]
+feeds = ['whale_alert']
+
+[reddit]
+subreddits = []
