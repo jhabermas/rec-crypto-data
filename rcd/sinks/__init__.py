@@ -36,12 +36,12 @@ class DataSink:
             case "mongo":
                 from .mongo import MongoDBClient
 
-                self.db_client = MongoDBClient(config)
+                self.db_client = MongoDBClient(config[config.db_name])
                 self.storage_method = partial(save_to_db, self.db_client)
             case "oracle":
                 from .oracle import OracleDBClient
 
-                self.db_client = OracleDBClient(config)
+                self.db_client = OracleDBClient(config[config.db_name])
                 self.storage_method = partial(save_to_db, self.db_client)
             case _:
                 raise RuntimeError("Invalid storage method")

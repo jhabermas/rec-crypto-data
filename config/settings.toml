@@ -5,11 +5,22 @@ rec_oi = true
 rec_tickers = true
 rec_positions = true
 rec_raw_data = false
+db_name = 'db'
 
 [db]
 dry_run = false
 
 [db.batch_size]
+default = 50
+ob = 20
+oi = 100
+ticker = 20
+funding = 80
+
+[db2]
+dry_run = false
+
+[db2.batch_size]
 default = 50
 ob = 20
 oi = 100

@@ -1,7 +1,7 @@
 dynaconf_include = ['.secrets.api_keys.toml']
 
 [markets]
-interval = 900
+interval = 3600 # seconds
 
 [[markets.endpoints]]
 api = 'binance'

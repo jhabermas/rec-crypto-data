@@ -18,12 +18,12 @@ class MongoDBClient:
             config: Configuration object with database settings.
         """
         self.lock = Lock()
-        self.dry_run = config.db.dry_run
+        self.dry_run = config.dry_run
         self.batch_data: Dict[str, List[Any]] = {}
-        self.batch_size = config.db.batch_size.to_dict()
+        self.batch_size = config.batch_size.to_dict()
         if not self.dry_run:
-            self.client: AgnosticClient = AsyncIOMotorClient(config.db.mongo.conn_str)
-            self.db = self.client[config.db.user]
+            self.client: AgnosticClient = AsyncIOMotorClient(config.mongo.conn_str)
+            self.db = self.client[config.user]
         else:
             log.info("Database Client created in dry_run mode")
 
