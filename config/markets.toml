@@ -85,7 +85,7 @@ interval = 3600
 api = 'coingecko'
 channel = 'markets'
 category = 'mcap'
-url = 'https://api.coingecko.com/api/v3/coins/markets?vs_currency=USD&order=market_cap_desc&per_page=100&page=1&sparkline=false&locale=en'
+url = 'https://api.coingecko.com/api/v3/coins/markets?vs_currency=USD&order=market_cap_desc&per_page=200&page=1&sparkline=false&price_change_percentage=1h,24h&locale=en'
 
 [[marketcap.endpoints]]
 api = 'coingecko'
@@ -129,34 +129,32 @@ protocols = [
     'aave-v3',
     'pancakeswap',
 ]
+interval = 3600
 
 [[defi.endpoints]]
 api = 'defillama'
 channel = 'defi_tvl'
 category = 'tvl'
 url = 'https://api.llama.fi/v2/chains'
-interval = 900
 
 [[defi.endpoints]]
 api = 'defillama'
 channel = 'defi_stablecoins'
 category = 'stablecoins'
 url = 'https://stablecoins.llama.fi/stablecoins?includePrices=true'
-interval = 900
 
 [[defi.endpoints]]
 api = 'defillama'
 channel = 'defi_yields'
 category = 'yields'
 url = 'https://yields.llama.fi/pools'
-interval = 900
+interval = 28800
 
 [[defi.endpoints]]
 api = 'defillama'
 channel = 'defi_fees'
 category = 'fees'
 url = 'https://api.llama.fi/overview/fees?excludeTotalDataChart=true&excludeTotalDataChartBreakdown=true&dataType=dailyFees'
-interval = 900
 
 [etf]
 tickers = [
