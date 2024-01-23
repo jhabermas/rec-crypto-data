@@ -1,3 +1,5 @@
+dynaconf_merge = true # Required for include files to not overwrite values
+
 [binance]
 
 [binance.tickers_spot]
