@@ -48,11 +48,12 @@ url = 'https://api.bybit.com/v5/market/tickers?category=inverse'
 #category = 'futures'
 #url = 'https://www.okx.com/api/v5/market/tickers?instType=SWAP'
 
-[[markets.endpoints]]
-api = 'okx'
-channel = 'oi'
-category = 'options'
-url = 'https://www.okx.com/api/v5/public/open-interest?instType=OPTION'
+# Tiny market
+#[[markets.endpoints]]
+#api = 'okx'
+#channel = 'oi'
+#category = 'options'
+#url = 'https://www.okx.com/api/v5/public/open-interest?instType=OPTION'
 
 [[markets.endpoints]]
 api = 'okx'
@@ -81,11 +82,12 @@ url = 'https://www.deribit.com/api/v2/public/get_book_summary_by_currency?curren
 [marketcap]
 interval = 3600
 
-[[marketcap.endpoints]]
-api = 'coingecko'
-channel = 'markets'
-category = 'mcap'
-url = 'https://api.coingecko.com/api/v3/coins/markets?vs_currency=USD&order=market_cap_desc&per_page=200&page=1&sparkline=false&price_change_percentage=1h,24h&locale=en'
+# Not much useful info
+#[[marketcap.endpoints]]
+#api = 'coingecko'
+#channel = 'markets'
+#category = 'mcap'
+#url = 'https://api.coingecko.com/api/v3/coins/markets?vs_currency=USD&order=market_cap_desc&per_page=200&page=1&sparkline=false&price_change_percentage=1h,24h&locale=en'
 
 [[marketcap.endpoints]]
 api = 'coingecko'
