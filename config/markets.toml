@@ -119,6 +119,13 @@ category = 'binance'
 url = 'https://pro-api.coinmarketcap.com/v1/exchange/assets?id=270'
 headers = { 'X-CMC_PRO_API_KEY' = "@format {this.cmc.api_key}" }
 
+[[marketcap.endpoints]]
+api = 'cmc'
+channel = 'assets'
+category = 'bitfinex'
+url = 'https://pro-api.coinmarketcap.com/v1/exchange/assets?id=37'
+headers = { 'X-CMC_PRO_API_KEY' = "@format {this.cmc.api_key}" }
+
 [defi]
 protocols = [
     'uniswap-v2',
