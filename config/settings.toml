@@ -17,16 +17,6 @@ oi = 100
 ticker = 20
 funding = 80
 
-[db2]
-dry_run = false
-
-[db2.batch_size]
-default = 50
-ob = 20
-oi = 100
-ticker = 20
-funding = 80
-
 [cryptofeed]
 exchanges = ['BinanceFutures', 'Bitmex', 'OKX']
 

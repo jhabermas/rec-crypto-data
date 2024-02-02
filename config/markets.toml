@@ -1,5 +1,15 @@
 dynaconf_include = ['.secrets.api_keys.toml']
 
+[db2]
+dry_run = false
+
+[db2.batch_size]
+default = 4
+defi = 1
+global = 1
+assets = 1
+quotes = 1
+
 [markets]
 interval = 3600 # seconds
 
