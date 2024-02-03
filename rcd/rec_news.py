@@ -197,24 +197,29 @@ def fetch_news(feed_list):
     return news
 
 
-def save_to_db(db, channel, data):
-    try:
-        collection = db[channel]
-        result = collection.insert_many(data)
-        log.info(f"Inserted {len(result.inserted_ids)} into {channel}")
-    except Exception as e:
-        log.error(f"Error saving {channel} data to database")
-        log.exception(e)
-
-
 def save_to_json(channel, data):
     filename = f"{channel}.json"
     with open(filename, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=4)
 
 
+def save_to_db(db, channel, data):
+    if config.dry_run:
+        save_to_json(channel, data)
+        log.info(f"Saved {len(data)} documents to {channel}.json")
+        return
+    try:
+        collection = db[channel]
+        result = collection.insert_many(data)
+        log.info(f"Inserted {len(result.inserted_ids)} documents into {channel}")
+    except Exception as e:
+        log.error(f"Error saving {channel} data to database")
+        log.exception(e)
+
+
 def main():
     log.info("Initialising news sync...")
+    log.info(f"Dry run: {config.dry_run}")
     db_client = None
     try:
         log.info(f"Using database: {config.db_name}")
@@ -223,7 +228,6 @@ def main():
         feeds = load_feed_urls()
         reddit_client = redditwarp.SYNC.Client()
         subreddits = config.reddit.subreddits
-
         while True:
             start = time.perf_counter()
             news = {"crypto": [], "tradfi": []}
