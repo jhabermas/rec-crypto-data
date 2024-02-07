@@ -27,7 +27,9 @@ def map_data(
     for k, v in format.mapping.items():
         out[k] = data[v]
     if "ts" not in out or out["ts"] is None:
-        out["ts"] = datetime.utcnow().timestamp() * 1000
+        out["ts"] = int(datetime.utcnow().timestamp() * 1000)
+    else:
+        out["ts"] = int(out["ts"])
     if "map_symbols" in format:
         out["symbol"] = format.map_symbols[out["symbol"]]
     return out
