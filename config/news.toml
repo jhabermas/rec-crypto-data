@@ -1,0 +1,6 @@
+fetch_interval = 3600
+dry_run = false
+db_name = 'db2'
+
+[reddit]
+subreddits = ['bitcoin', 'bitcoinmarkets', 'cryptocurrency']

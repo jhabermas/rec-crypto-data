@@ -3,8 +3,10 @@ asyncio
 ccxt
 cryptofeed
 dynaconf
+feedparser
 importlib
 motor
 orjson
 prettyprint
+redditwarp
 websockets

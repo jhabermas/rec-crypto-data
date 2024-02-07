@@ -1,0 +1,290 @@
+dynaconf_merge = true # Required for include files to not overwrite values
+
+[binance]
+
+[binance.tickers_spot]
+is_array = true
+
+[binance.tickers_spot.mapping]
+symbol = 'symbol'
+price_change_24h = 'priceChangePercent'
+wap = 'weightedAvgPrice'
+last_price = 'lastPrice'
+open = 'openPrice'
+high_24h = 'highPrice'
+low_24h = 'lowPrice'
+volume_24h = 'volume'
+quote_volume_24h = 'quoteVolume'
+open_time = 'openTime'
+close_time = 'closeTime'
+trade_count_24h = 'count'
+
+[binance.tickers_futures]
+is_array = true
+
+[binance.tickers_futures.mapping]
+symbol = 'symbol'
+price_change_24h = 'priceChangePercent'
+wap = 'weightedAvgPrice'
+last_price = 'lastPrice'
+open_ = 'openPrice'
+high_24h = 'highPrice'
+low_24h = 'lowPrice'
+volume_24h = 'volume'
+quote_volume_24h = 'quoteVolume'
+open_time = 'openTime'
+close_time = 'closeTime'
+trade_count_24h = 'count'
+
+[bybit]
+
+[bybit.tickers_spot]
+data_root = 'result'
+is_array = true
+array_root = 'list'
+
+[bybit.tickers_spot.mapping]
+symbol = 'symbol'
+price_change_24h = 'price24hPcnt'
+last_price = 'lastPrice'
+high_24h = 'highPrice24h'
+low_24h = 'lowPrice24h'
+volume_24h = 'volume24h'
+turnover_24h = 'turnover24h'
+
+[bybit.tickers_futures]
+data_root = 'result'
+is_array = true
+array_root = 'list'
+
+[bybit.tickers_futures.mapping]
+symbol = 'symbol'
+price_change_24h = 'price24hPcnt'
+last_price = 'lastPrice'
+high_24h = 'highPrice24h'
+low_24h = 'lowPrice24h'
+volume_24h = 'volume24h'
+turnover_24h = 'turnover24h'
+open_interest = 'openInterest'
+open_interest_value = 'openInterestValue'
+funding_rate = 'fundingRate'
+
+[cmc]
+
+[cmc.quotes]
+is_array = false
+
+[cmc.quotes.mapping]
+data = 'data'
+
+[cmc.assets]
+is_array = false
+
+[cmc.assets.mapping]
+data = 'data'
+
+[coingecko]
+
+[coingecko.defi]
+is_array = false
+
+[coingecko.defi.mapping]
+data = 'data'
+
+[coingecko.derivatives]
+is_array = true
+
+[coingecko.derivatives.mapping]
+market = "market"
+symbol = "symbol"
+index_id = "index_id"
+price = "price"
+price_percentage_change_24h = "price_percentage_change_24h"
+contract_type = "contract_type"
+index = "index"
+basis = "basis"
+spread = "spread"
+funding_rate = "funding_rate"
+open_interest = "open_interest"
+volume_24h = "volume_24h"
+last_traded_at = "last_traded_at"
+
+[coingecko.global]
+is_array = false
+
+[coingecko.global.mapping]
+data = 'data'
+
+[coingecko.markets]
+is_array = true
+
+[coingecko.markets.mapping]
+id = "id"
+symbol = "symbol"
+name = "name"
+#image = 'image'
+current_price = "current_price"
+market_cap = "market_cap"
+market_cap_rank = "market_cap_rank"
+fully_diluted_valuation = "fully_diluted_valuation"
+total_volume = "total_volume"
+high_24h = "high_24h"
+low_24h = "low_24h"
+price_change_percentage_24h = "price_change_percentage_24h"
+market_cap_change_percentage_24h = "market_cap_change_percentage_24h"
+circulating_supply = "circulating_supply"
+total_supply = "total_supply"
+max_supply = "max_supply"
+ath = "ath"
+ath_change_percentage = "ath_change_percentage"
+ath_date = "ath_date"
+atl = "atl"
+atl_change_percentage = "atl_change_percentage"
+atl_date = "atl_date"
+last_updated = "last_updated"
+
+[defillama]
+
+[defillama.defi_yields]
+is_array = true
+array_root = 'data'
+
+[defillama.defi_yields.mapping]
+chain = 'chain'
+project = 'project'
+symbol = 'symbol'
+tvl_usd = 'tvlUsd'
+apy = 'apy'
+apy_pct_1d = 'apyPct1D'
+apy_pct_7d = 'apyPct7D'
+mu = 'mu'
+sigma = 'sigma'
+count = 'count'
+
+[defillama.defi_fees]
+is_array = true
+array_root = 'protocols'
+
+[defillama.defi_fees.mapping]
+name = 'name'
+total_24h = 'total24h'
+total_7d = 'total7d'
+daily_revenue = 'dailyRevenue'
+
+[defillama.defi_stablecoins]
+is_array = true
+array_root = 'peggedAssets'
+
+[defillama.defi_stablecoins.mapping]
+name = 'name'
+symbol = 'symbol'
+circulating = 'circulating'
+circulating_prev_day = 'circulatingPrevDay'
+circulating_prev_week = 'circulatingPrevWeek'
+circulating_prev_month = 'circulatingPrevMonth'
+
+[defillama.defi_tvl]
+is_array = true
+
+[defillama.defi_tvl.mapping]
+symbol = 'tokenSymbol'
+name = 'name'
+tvl = 'tvl'
+
+[deribit]
+
+[deribit.tickers_futures]
+array_root = 'result'
+is_array = true
+
+[deribit.tickers_futures.mapping]
+symbol = 'instrument_name'
+creation_timestamp = 'creation_timestamp'
+base_currency = 'base_currency'
+quote_currency = 'quote_currency'
+mid_price = 'mid_price'
+volume_usd = 'volume_usd'
+volume = 'volume'
+price_change = 'price_change'
+mark_price = 'mark_price'
+open_interest = 'open_interest'
+last = 'last'
+low = 'low'
+high = 'high'
+
+[deribit.tickers_options]
+array_root = 'result'
+is_array = true
+
+[deribit.tickers_options.mapping]
+symbol = 'instrument_name'
+creation_timestamp = 'creation_timestamp'
+base_currency = 'base_currency'
+quote_currency = 'quote_currency'
+mid_price = 'mid_price'
+volume_usd = 'volume_usd'
+volume = 'volume'
+price_change = 'price_change'
+mark_price = 'mark_price'
+open_interest = 'open_interest'
+last = 'last'
+low = 'low'
+high = 'high'
+ask_price = 'ask_price'
+bid_price = 'bid_price'
+
+[dydx]
+
+[dydx.tickers_futures]
+is_array = false
+
+[dydx.tickers_futures.mapping]
+markets = 'markets'
+
+[okx]
+
+[okx.oi]
+is_array = true
+array_root = 'data'
+
+[okx.oi.mapping]
+symbol = 'instId'
+oi = 'oi'
+oi_ccy = 'oiCcy'
+ts = 'ts'
+
+[okx.tickers_spot]
+is_array = true
+array_root = 'data'
+
+[okx.tickers_spot.mapping]
+
+[okx.tickers_futures]
+is_array = true
+array_root = 'data'
+
+[okx.tickers_futures.mapping]
+
+[okx.options]
+is_array = true
+array_root = 'data'
+
+[okx.options.mapping]
+ask_vol = "askVol"
+bid_vol = "bidVol"
+delta = "delta"
+delta_bs = "deltaBS"
+fwd_px = "fwdPx"
+gamma = "gamma"
+gamma_bs = "gammaBS"
+symbol = "instId"
+lever = "lever"
+mark_vol = "markVol"
+real_vol = "realVol"
+theta = "theta"
+theta_bs = "thetaBS"
+ts = "ts"
+uly = "uly"
+vega = "vega"
+vega_bs = "vegaBS"
+vol_lv = "volLv"

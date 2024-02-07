@@ -1,0 +1,10 @@
+source, url
+reuters,https://www.reutersagency.com/feed/?best-customer-impacts=market-impact&post_type=best
+marketwatch,https://feeds.content.dowjones.io/public/rss/mw_marketpulse
+cnbc,https://search.cnbc.com/rs/search/combinedcms/view.xml?partnerId=wrss01&id=100003114
+seekingalpha,https://seekingalpha.com/market_currents.xml
+investing.com,https://uk.investing.com/rss/news.rss
+investing.com,https://uk.investing.com/rss/stock.rss
+ft,https://www.ft.com/myft/following/acba697f-c450-4d5b-9094-b330fb7d84da.rss
+dj,https://feeds.a.dj.com/rss/RSSMarketsMain.xml
+bloomberg,https://feeds.bloomberg.com/markets/news.rss

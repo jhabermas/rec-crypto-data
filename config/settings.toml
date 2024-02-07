@@ -5,6 +5,7 @@ rec_oi = true
 rec_tickers = true
 rec_positions = true
 rec_raw_data = false
+db_name = 'db'
 
 [db]
 dry_run = false

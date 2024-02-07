@@ -7,9 +7,11 @@ import time
 
 log = logging.getLogger(__name__)
 
-dsn = settings.db.oracle.dsn
-username = settings.db.admin.user
-password = settings.db.admin.password
+db_config = settings[settings.db_name]
+
+dsn = db_config.oracle.dsn
+username = db_config.admin.user
+password = db_config.admin.password
 
 query = f"""
 SELECT 
@@ -30,10 +32,11 @@ def get_db_size():
     except oracledb.Error as e:
         logging.error(f"Database error: {e}")
 
-def main():
+def main():    
     while True:
         db_size = get_db_size()
         if db_size is not None:
+            
             log.info(f'{db_size}')
         time.sleep(900)
 
