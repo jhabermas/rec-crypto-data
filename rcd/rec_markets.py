@@ -1,5 +1,6 @@
 import asyncio
 import logging
+import time
 from signal import SIGINT, SIGTERM
 from typing import Any, Dict, List, Optional
 
@@ -34,7 +35,7 @@ async def save_data(
         await sink.store_data(
             map_market_data(source, channel, category, data),
             {"name": channel},
-         )
+        )
     else:
         log.warning(f"No {channel} data to save from {source}")
 
@@ -62,11 +63,15 @@ async def fetch_and_save_http(
     """
     while True:
         try:
+            start = time.perf_counter()
             data = await fetch_from_url(session, url, headers)
             await save_data(sink, exchange, channel, category, data)
-            await asyncio.sleep(interval)
+            elapsed = time.perf_counter() - start
+            await asyncio.sleep(interval - elapsed)
         except Exception as e:
-            log.error(f"Error when fetching market data from {exchange} {channel} {category}")
+            log.error(
+                f"Error when fetching market data from {exchange} {channel} {category}"
+            )
             log.exception(e)
 
 

@@ -115,9 +115,11 @@ async def fetch_and_save_http(
         sink: The data sink object used for storing data.
     """
     while True:
+        start = time.perf_counter()
         data = await fetch_from_url(session, url)
         await save_data(sink, exchange, channel, symbol, data)
-        await asyncio.sleep(interval / 1000)
+        elapsed = time.perf_counter() - start
+        await asyncio.sleep((interval / 1000) - elapsed)
 
 
 async def fetch_http_data(config: Any, sink: DataSink) -> None:
