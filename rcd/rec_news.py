@@ -9,7 +9,7 @@ import pytz
 import redditwarp.SYNC
 import requests
 from bs4 import BeautifulSoup
-from pymongo import MongoClient
+from pymongo import MongoClient, database
 
 from rcd.config import get_module_config, settings
 from rcd.config.log_config import setup_logging
@@ -60,8 +60,10 @@ def fetch_reddit_comments(client, subreddit):
                         "id": f"{c.submission.id36}+{c.id36}",
                         "ts": c.created_ut,
                         "author": c.author_display_name,
+                        "score": c.score,
                         "body": c.body,
-                        "subredit": subreddit,
+                        "subreddit": subreddit,
+                        "permalink": c.permalink,
                     }
                     comments.append(comment)
             except Exception as e:
@@ -203,18 +205,24 @@ def save_to_json(channel, data):
         json.dump(data, f, ensure_ascii=False, indent=4)
 
 
-def save_to_db(db, channel, data):
-    if config.dry_run:
-        save_to_json(channel, data)
-        log.info(f"Saved {len(data)} documents to {channel}.json")
-        return
+def save_to_db(db: database, channel: str, data: list):
     try:
-        collection = db[channel]
+        collection = db.get_collection(channel)
         result = collection.insert_many(data)
         log.info(f"Inserted {len(result.inserted_ids)} documents into {channel}")
     except Exception as e:
         log.error(f"Error saving {channel} data to database")
         log.exception(e)
+
+def save_data(db, channel, data):
+    if not data:
+        log.info(f"No data to save for {channel}")
+        return
+    if config.dry_run:
+        save_to_json(channel, data)
+        log.info(f"Saved {len(data)} documents to {channel}.json")
+    else:
+        save_to_db(db, channel, data)
 
 
 def main():
@@ -225,6 +233,7 @@ def main():
         log.info(f"Using database: {config.db_name}")
         db_config = settings[config.db_name]
         db_client = MongoClient(db_config.mongo.conn_str)
+        db = db_client[db_config.user]
         feeds = load_feed_urls()
         reddit_client = redditwarp.SYNC.Client()
         subreddits = config.reddit.subreddits
@@ -237,8 +246,8 @@ def main():
             for sr in subreddits:
                 reddit_comments.extend(fetch_reddit_comments(reddit_client, sr))
             for channel, entries in news.items():
-                save_to_db(db_client, f"news_{channel}", entries)
-            save_to_db(db_client, "reddit", reddit_comments)
+                save_data(db, f"news_{channel}", entries)
+            save_data(db, "reddit", reddit_comments)
             elapsed = time.perf_counter() - start
             time.sleep(config.fetch_interval - elapsed)
     except Exception as e:
