@@ -58,7 +58,7 @@ def fetch_reddit_comments(client, subreddit):
                         continue
                     comment = {
                         "id": f"{c.submission.id36}+{c.id36}",
-                        "ts": c.created_ut,
+                        "ts": int(c.created_ut),
                         "author": c.author_display_name,
                         "score": c.score,
                         "body": c.body,
@@ -187,7 +187,7 @@ def fetch_news(feed_list):
                 "summary": summary,
                 "content": content,
                 "published": published,
-                "ts": ts,
+                "ts": int(ts),
             }
             feed_entries.append(news_entry)
 
